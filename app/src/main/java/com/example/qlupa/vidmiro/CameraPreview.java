@@ -2,19 +2,15 @@ package com.example.qlupa.vidmiro;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
-import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 
 import java.io.IOException;
 
 import static android.content.ContentValues.TAG;
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by yudan on 19/05/2017.
@@ -70,8 +66,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             // ignore: tried to stop a non-existent preview
         }
 
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
+        // set the camera orientation
         setCameraRotation();
 
         // start preview with new settings
@@ -84,9 +79,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    /**
+     * SetCameraRotiation Method
+     * This is for fix the orientation of the camera preview and the video output
+     */
     public void setCameraRotation() {
         try {
-
             Camera.CameraInfo camInfo = new Camera.CameraInfo();
 
             Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_FRONT, camInfo);
@@ -134,7 +132,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.setParameters(parameters);
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.example.qlupa.vidmiro;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -13,19 +11,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Surface;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static android.R.attr.id;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 public class MainActivity extends AppCompatActivity {
     private Camera mCamera;
@@ -129,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         return mediaFile;
     }
 
+    /*ReleasMediaRecorder Method*/
     private void releaseMediaRecorder(){
         if (mMediaRecorder != null) {
             mMediaRecorder.reset();   // clear recorder configuration
@@ -138,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*ReleaseCamera Method*/
     private void releaseCamera(){
         if (mCamera != null){
             mCamera.release();        // release the camera for other applications
@@ -172,11 +166,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean prepareVideoRecorder() {
+        //Create MediaRecorder Object
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
-        mMediaRecorder.setCamera(mCamera);
+        mMediaRecorder.setCamera(mCamera); // Set the camera
 
         // Step 2: Set sources
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
@@ -205,34 +200,5 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    public static void setCameraDisplayOrientation(Activity activity,
-                                                   int cameraId, android.hardware.Camera camera) {
-
-        android.hardware.Camera.CameraInfo info =
-                new android.hardware.Camera.CameraInfo();
-
-        android.hardware.Camera.getCameraInfo(cameraId, info);
-
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-
-        switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
-        }
-
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
-        } else {  // back-facing
-            result = (info.orientation - degrees + 360) % 360;
-        }
-        CameraPreview.orientation=result;
-        camera.setDisplayOrientation(result);
     }
 }
