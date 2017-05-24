@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         preview.addView(mPreview);
 
         // Add a listener to the Capture button
-        FloatingActionButton captureButton = (FloatingActionButton) findViewById(R.id.btnRecord);
+        final FloatingActionButton captureButton = (FloatingActionButton) findViewById(R.id.btnRecord);
+        captureButton.setImageResource(R.mipmap.ic_videocam_white);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     mCamera.lock();         // take camera access back from MediaRecorder
 
                     // inform the user that recording has stopped
+                    captureButton.setImageResource(R.mipmap.ic_videocam_white);
                     isRecording = false;
                 } else {
                     // initialize video camera
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         mMediaRecorder.start();
 
                         // inform the user that recording has started
+                        captureButton.setImageResource(R.mipmap.ic_stop_white);
                         isRecording = true;
                     } else {
                         // prepare didn't work, release the camera
@@ -92,15 +95,14 @@ public class MainActivity extends AppCompatActivity {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "VidMiro");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
-                Log.d("MyCameraApp", "failed to create directory");
+//                Log.d("MyCameraApp", "failed to create directory");
                 return null;
             }
         }
@@ -108,10 +110,7 @@ public class MainActivity extends AppCompatActivity {
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
+        if(type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_"+ timeStamp + ".mp4");
         } else {
